@@ -1,6 +1,5 @@
 import './App.css';
-import router from '../../altchain/frontend/router'
-
+import router from './components/frontend/router'
 
 const routing = new router(
   '0xD2ae7BDa445F580Ce1790872876524ebb93F8CA2', 
@@ -11,13 +10,12 @@ const routing = new router(
 function App() {
   return (
     <div className="App">
-      <button onClick={async() => routing.sendMultiERC20(
+      <button onClick={async() => routing.approveERC20_sendMultiERC20(
         '0x00Eb93d4a108117eb6470100937eBf4B74806c18', 
         ['0x99dB02471F82A64EF708DcfC8C3d022822530bf3', '0x1cA129e961c664630fb963F5a3Dc4d58F4bb3194'],
         [100, 150],
         250
-      )}> send Multi ERC20</button>
-       
+      )}> send Multi ERC20</button>    
     </div>
   );
 }
