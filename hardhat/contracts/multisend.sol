@@ -6,35 +6,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 contract MultiSender {
-    function sendMultiETH(
-        address payable[] memory listReceivers,
-        uint256[] memory listAmounts
-    ) public payable {
-        uint256 totalReceivers = listReceivers.length;
-        uint256 totalAmounts;
-        for (uint256 i = 0; i < totalReceivers; i++) {
-            totalAmounts += listAmounts[i];
-        }
-        require(msg.sender.balance >= totalAmounts, "Total balance not enough");
-        require(msg.value == totalAmounts, "Value not enough");
-        for (uint256 i = 0; i < totalReceivers; i++) {
-            (bool success, bytes memory data) = listReceivers[i].call{
-                value: listAmounts[i]
-            }("");
-            delete data;
-            require(
-                success,
-                string(
-                    abi.encodePacked(
-                        "Transaction ",
-                        Strings.toString(i),
-                        " failed"
-                    )
-                )
-            );
-        }
-    }
-
+/*
     function sendMultiERC721(
         address addressERC721,
         address[] memory listReceivers,
@@ -61,6 +33,9 @@ contract MultiSender {
         }
         return true;
     }
+
+*/
+
     function sendMultiERC20(
         address addressERC20,
         address[] memory listReceivers,

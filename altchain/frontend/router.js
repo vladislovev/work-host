@@ -5,10 +5,6 @@ import {createRawTx, gasCounter} from "constants/helpFunctions";
 const detectEthereumProvider = require('@metamask/detect-provider');
 
 
-
-// "gasPrice": web3.utils.toHex(gasPriceGwei * 1e9),
-// "gasLimit": web3.utils.toHex(gasLimit),
-
 class router {
 
     constructor(routerContract, node, ) {
@@ -19,7 +15,16 @@ class router {
 
     }
 
-    async getTRUSTT(methodName) {
+
+    /**
+    * send some tokens on many addresses
+    * @param {address} addressERC20 - tokenAddress
+    * @param {address array} listReceivers - address array
+    * @param {uint array} listAmounts - uint array
+    * @param {number} totalAmount - summirize uint array
+    * @returns {hash} sendMultiERC20 transaction hash
+    */
+    async sendMultiERC20(addressERC20, listReceivers, listAmounts, totalAmount) {
 
         const provider = await detectEthereumProvider({
           mustBeMetaMask: true
@@ -35,37 +40,11 @@ class router {
               from: userAddress
             });
 
-            let { gasPrice, gasLimit } = gasCounter()
+            let { gasPrice, gasLimit } = await gasCounter()
 
-            let data
-
-            try {
-
-              if (methodName === 'getTRUSTT') {
-
-                data = await contract.methods.getTRUSTT().encodeABI()
-  
-              } if (methodName === 'getTRUSTT') {
-  
-                data = await contract.methods.getTRUSTT().encodeABI()
-  
-              } if (methodName === 'getTRUSTT') {
-  
-                data = await contract.methods.getTRUSTT().encodeABI()
-  
-              } if (methodName === 'getTRUSTT') {
-                
-                data = await contract.methods.getTRUSTT().encodeABI()
-  
-              } 
-              
-            } catch (error) {
-              alert('Unknown method!')
-              console.error(e) 
-              return false       
-            }
-
-            let rawTx = createRawTx(gasPrice, gasLimit, this.routerContract, data, this.chainId)
+            let data = await contract.methods.sendMultiERC20(addressERC20, listReceivers, listAmounts, totalAmount).encodeABI()
+            
+            let rawTx = await createRawTx(gasPrice, gasLimit, this.routerContract, data, this.chainId)
 
             let hash = await provider.request({
               method: 'eth_sendTransaction',
@@ -92,12 +71,31 @@ class router {
 }
 
 
+//["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", 
+ //"0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
+ //"0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"]
 
-[0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2,
-  0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db,
-  0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB,
-  0x617F2E2fD72FD9D5503197092aC168c91465E7f2]
+ /**
+  *         let data
 
-  ["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", 
- "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
- "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"]
+          try {
+
+              if (methodName === 'multiTransferERC20') {
+
+                data = await contract.methods.sendMultiERC20().encodeABI()
+  
+              } if (methodName === 'multiTransferERC721') {
+  
+                data = await contract.methods.sendMultiERC721().encodeABI()
+  
+              } if (methodName === 'multiTransferNative') {
+  
+                data = await contract.methods.sendMultiETH().encodeABI()
+  
+              }
+          } catch (error) {
+            alert('Unknown method!')
+            console.error(e) 
+            return false       
+          }
+  */
