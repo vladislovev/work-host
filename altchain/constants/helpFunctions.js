@@ -14,10 +14,10 @@ export default async function createRawTx(gasPriceGwei, gasLimit, to, data, chai
     
 }
 
-export default async function gasCounter() {
+export default async function gasCounter(web3) {
 
-  const gasPrice = ''
-  const gasLimit = ''
+  const gasPrice = web3.eth.getGasPrice()
+  const gasLimit = 700000
 
   return gasPrice, gasLimit
 

@@ -1,21 +1,20 @@
 import Web3 from "../classes/helper/web3.min.js";
 import routerAbi from "constants/routerAbi.js";
+import ERC20Abi from "constants/ERC20ABI.js";
 import {createRawTx, gasCounter} from "constants/helpFunctions";
 
 const detectEthereumProvider = require('@metamask/detect-provider');
 
 
-class router {
+export default class router {
 
-    constructor(routerContract, node, ) {
+    constructor(routerContract, node, chainId) {
 
         this.routerContract = routerContract 
-        this.chainId = chainId
         this.node = node
+        this.chainId = chainId
 
     }
-
-
     /**
     * send some tokens on many addresses
     * @param {address} addressERC20 - tokenAddress
@@ -40,7 +39,7 @@ class router {
               from: userAddress
             });
 
-            let { gasPrice, gasLimit } = await gasCounter()
+            let { gasPrice, gasLimit } = await gasCounter(web3)
 
             let data = await contract.methods.sendMultiERC20(addressERC20, listReceivers, listAmounts, totalAmount).encodeABI()
             
@@ -66,14 +65,71 @@ class router {
           return false
         }
     
+    }
+
+    async approveERC20_sendMultiERC20(addressERC20, listReceivers, listAmounts, totalAmount) {
+
+      const provider = await detectEthereumProvider({
+        mustBeMetaMask: true
+      })
+      if (provider) {
+        const accounts = await provider.request({method: 'eth_requestAccounts'});
+        const userAddress = accounts[0]
+  
+        const web3 = new Web3(this.node)
+  
+        const tokenContract = await new web3.eth.Contract(ERC20Abi, this.addressERC20, {
+          from: userAddress
+        });
+
+        let { gasPrice, gasLimit } = await gasCounter(web3)
+
+        let newNumber = web3.utils.toWei(totalAmount.toString(), 'ether');
+
+        let dataAprove = await tokenContract.methods.approve(this.routerContract, newNumber).encodeABI()
+
+        let rawTxAprove = await createRawTx(gasPrice, gasLimit, this.routerContract, dataAprove, this.chainId)       
+      
+        const hash = await provider.request({
+          method: 'eth_sendTransaction',
+          params: [
+            {
+              from: accounts[0],
+              ...rawTxAprove
+            }
+          ],
+        })
+  
+        return new Promise((resolve, reject) => {
+  
+          const intervalID = setInterval(async () => {
+  
+            const info = await web3.eth.getTransactionReceipt(hash)
+            console.log(info);
+  
+            if (info.status === true) {
+              clearInterval(intervalID)
+  
+              const hash2 = await this.sendMultiERC20(addressERC20, listReceivers, listAmounts, newNumber);
+
+              console.log(hash, hash2);
+  
+              resolve({hash, hash2})
+            } else {
+              clearInterval(intervalID)
+            }
+          }, 20000)
+  
+        })
+  
+      } else {
+        console.error('Please install metamask')
+        return false
       }
+  
+    }
 
 }
-
-
-//["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", 
- //"0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db",
- //"0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"]
 
  /**
   *         let data

@@ -1,23 +1,23 @@
-import logo from './logo.svg';
 import './App.css';
+import router from '../../altchain/frontend/router'
+
+
+const routing = new router(
+  '0xD2ae7BDa445F580Ce1790872876524ebb93F8CA2', 
+  'https://speedy-nodes-nyc.moralis.io/8f92744f1777e6b94d592c12/eth/rinkeby', 
+  4)
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={async() => routing.sendMultiERC20(
+        '0x00Eb93d4a108117eb6470100937eBf4B74806c18', 
+        ['0x99dB02471F82A64EF708DcfC8C3d022822530bf3', '0x1cA129e961c664630fb963F5a3Dc4d58F4bb3194'],
+        [100, 150],
+        250
+      )}> send Multi ERC20</button>
+       
     </div>
   );
 }
