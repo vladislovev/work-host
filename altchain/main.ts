@@ -1,9 +1,9 @@
-import binance from './Classes/binance';
-import cryptoboss from './Classes/cryptoboss';
-import opensea from './Classes/opensea';
-import emercoin from './Classes/emercoin';
-import monitoring from './Classes/monitoring';
-import tatum from './Classes/tatum';
+import binance from './classes/binance';
+import cryptoboss from './classes/cryptoboss';
+import opensea from './classes/opensea';
+import emercoin from './classes/emercoin';
+import monitoring from './classes/monitoring';
+import tatum from './classes/tatum';
 
 
 

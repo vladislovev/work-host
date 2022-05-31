@@ -1,6 +1,6 @@
 import sundaoTest from './sundaoTest'
 import transaction from './transactions'
-import '../Classes/helper/web3.min.js'
+import '../classes/helper/web3.min.js.js'
 
 
 export default {
