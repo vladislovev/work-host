@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import routerAbi from "../constants/routerAbi.js";
 import ERC20Abi from "../constants/ERC20ABI.js";
-import {createRawTx, gasCounter} from "../constants/helpFunctions";
+import {createRawTx, gasCounter, createBigNumber} from "../constants/helpFunctions";
 
 const detectEthereumProvider = require('@metamask/detect-provider');
 
@@ -82,12 +82,13 @@ export default class router {
         });
 
         let { gasPrice, gasLimit } = await gasCounter(web3)
+        
 
-        let newNumber = web3.utils.toWei(totalAmount.toString(), 'ether');
+        let newNumber = await createBigNumber(web3, tokenContract, totalAmount)
 
         let dataAprove = await tokenContract.methods.approve(this.routerContract, newNumber).encodeABI()
 
-        let rawTxAprove = await createRawTx(gasPrice, gasLimit, addressERC20, dataAprove, this.chainId)       
+        let rawTxAprove = createRawTx(gasPrice, gasLimit, addressERC20, dataAprove, this.chainId)       
       
         const hash = await provider.request({
           method: 'eth_sendTransaction',

@@ -1160,6 +1160,7 @@ export default class sundaoTest {
       //let newNumber = new BigNumber(amount).mul(new BigNumber(10).pow(decimals))
       let newNumber = web3.utils.toWei(amount.toString(), 'ether');
 
+
       //let newNumber = '0x' + (new BigNumber(amount*10**decimals)).toString(16)
       //console.log(newNumber);
 
