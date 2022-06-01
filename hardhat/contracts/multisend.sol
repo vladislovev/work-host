@@ -1,40 +1,31 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.14;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
+interface IERC20 {
+
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+
+    function totalSupply() external view returns (uint256);
+
+    function balanceOf(address account) external view returns (uint256);
+
+    function transfer(address to, uint256 amount) external returns (bool);
+
+    function allowance(address owner, address spender) external view returns (uint256);
+
+    function approve(address spender, uint256 amount) external returns (bool);
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) external returns (bool);
+}
 
 contract MultiSender {
-/*
-    function sendMultiERC721(
-        address addressERC721,
-        address[] memory listReceivers,
-        uint256[] memory listTokenId
-    ) public returns (bool) {
-        require(listReceivers.length == listTokenId.length, "Not same length");
-
-        uint256 totalReceivers = listReceivers.length;
-        IERC721 erc721 = IERC721(addressERC721);
-
-        for (uint256 i = 0; i < totalReceivers; i++) {
-            require(
-                erc721.ownerOf(listTokenId[i]) == msg.sender,
-                "Token not owned by sender"
-            );
-        }
-
-        for (uint256 i = 0; i < totalReceivers; i++) {
-            require(
-                erc721.getApproved(listTokenId[i]) == address(this),
-                "Not approved"
-            );
-            erc721.transferFrom(msg.sender, listReceivers[i], listTokenId[i]);
-        }
-        return true;
-    }
-
-*/
 
     function sendMultiERC20(
         address addressERC20,
@@ -59,4 +50,5 @@ contract MultiSender {
         }
         return true;
     }
+    
 }
